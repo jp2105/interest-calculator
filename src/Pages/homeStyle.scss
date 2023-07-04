@@ -1,0 +1,15 @@
+.MuiContainer-root{
+padding: 0 !important;
+}
+.payout{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    padding: 0 15px;
+    span{
+        color: deepskyblue;
+    }
+}
+.MuiButton-text {
+   text-decoration: underline !important;
+}
