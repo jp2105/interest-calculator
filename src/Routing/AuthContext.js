@@ -6,22 +6,25 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const persistedState = localStorage.getItem('appState');
-    let history = useHistory();
     const [userData, setUserData] = useState(persistedState ? JSON.parse(persistedState) : {});
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         localStorage.setItem('appState', JSON.stringify(userData));
     }, [userData]);
     const login = (username, password) => {
         return new Promise((resolve, reject) => {
+            setLoading(true)
             db.collection("users").where("username", "==", username)
                 .get()
                 .then((querySnapshot) => {
+                    setLoading(false)
                     if (querySnapshot.empty) {
                         alert("user not found")
                         reject(false)
                     } else {
                         querySnapshot.forEach((doc) => {
-                            if (decryptStraing(doc.data().password) === password) {
+                            // if (decryptStraing(doc.data().password) === password) {
+                            if (doc.data().password === password) {
                                 setUserData({ ...doc.data(), id: doc.id });
                                 resolve("")
                             } else {
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }) => {
                     }
                 })
                 .catch((error) => {
+                    setLoading(false)
                     console.log("Error getting documents: ", error);
                     reject(false)
                 });
@@ -43,35 +47,52 @@ export const AuthProvider = ({ children }) => {
         setUserData({});
     };
 
-    const AddTransaction = (obj) =>{
-        return new Promise((resolve, reject) => {
-
+    const fetchUserData = () => {
         const documentRef = db.collection('users').doc(userData.id);
         documentRef.get()
         .then((doc) => {
-          if (doc.exists) {
-            const data = doc.data();
-            data.transaction.push(obj);
-            setUserData({...data,id:userData.id})
-            return documentRef.update({
-              'transaction': data.transaction
-            });
-          } else {
-            reject(false)
-            console.log('Document not found');
-          }
+            if (doc.exists) {
+                const data = doc.data();
+                setUserData({ ...data, id: userData.id })
+            }
         })
-        .then(() => {
-            resolve(true)
+    }
+    const AddTransaction = (obj) => {
+        setLoading(true)
+        return new Promise((resolve, reject) => {
+            const documentRef = db.collection('users').doc(userData.id);
+            documentRef.get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data?.transaction?.length) {
+                            data.transaction.push(obj);
+                        } else {
+                            data.transaction = [obj]
+                        }
+                        setUserData({ ...data, id: userData.id })
+                        return documentRef.update({
+                            'transaction': data.transaction
+                        });
+                    } else {
+                        setLoading(false)
+                        console.error('Document not found');
+                        reject(false)
+                    }
+                })
+                .then(() => {
+                    setLoading(false)
+                    resolve(true)
+                })
+                .catch((error) => {
+                    setLoading(false)
+                    console.error('Error updating array:', error);
+                    reject(false)
+                });
         })
-        .catch((error) => {
-            reject(false)
-          console.error('Error updating array:', error);
-        });
-    })
     }
     return (
-        <AuthContext.Provider value={{ userData, login, logout, AddTransaction }}>
+        <AuthContext.Provider value={{ userData, loading, login, logout, AddTransaction, fetchUserData }}>
             {children}
         </AuthContext.Provider>
     );

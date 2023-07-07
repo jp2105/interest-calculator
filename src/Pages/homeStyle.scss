@@ -8,8 +8,18 @@ padding: 0 !important;
     padding: 0 15px;
     span{
         color: deepskyblue;
+        letter-spacing: 1px;
+        font-size: 20px;
     }
 }
 .MuiButton-text {
    text-decoration: underline !important;
+}
+.MuiTextField-root{
+    width: 100% !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+.MuiOutlinedInput-input{
+    padding: 16.5px 14px !important;
 }

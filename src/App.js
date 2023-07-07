@@ -5,7 +5,6 @@ import ProtectedRoute from './Routing/ProtectedRoute';
 import Home from './Pages/Home';
 import Login from './Pages/Login'
 function App(pros) {
-  console.log("here",pros)
   return (
     <Router>
     <AuthProvider>

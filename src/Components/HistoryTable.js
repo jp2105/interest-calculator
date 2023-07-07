@@ -16,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import { TotalCapital } from '../Helpers';
 import { AuthContext } from '../Routing/AuthContext';
 import AddTnxModal from './AddTnxModal';
+import moment from 'moment';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -36,7 +37,7 @@ function getComparator(order, orderBy) {
 
 function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
+    stabilizedThis?.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
@@ -207,18 +208,18 @@ export default function HistoryTable() {
                                         <TableRow
                                             hover
                                             tabIndex={-1}
-                                            key={row?.date + row?.amount}
+                                            key={row?.date + row?.amount + row.type +index}
                                         >
-                                            <TableCell>{row.date}</TableCell>
+                                            <TableCell>{moment(new Date(row.date)).format('DD MMM YY')}</TableCell>
                                             <TableCell>{row.type}</TableCell>
-                                            <TableCell >{row.amount}</TableCell>
+                                            <TableCell >{(row.amount).toLocaleString('en-IN')}</TableCell>
                                         </TableRow>
                                     );
                                 })}
                             <TableRow>
                                 <TableCell rowSpan={3} />
                                 <TableCell colSpan={1}>Total Capital</TableCell>
-                                <TableCell align="right">{TotalCapital(rows)}</TableCell>
+                                <TableCell style={{fontSize:20}} align="right">{(TotalCapital(rows)).toLocaleString('en-IN')}</TableCell>
                             </TableRow>
                             {/* {emptyRows > 0 && (
                                 <TableRow style={{ height: (53) * emptyRows }}>

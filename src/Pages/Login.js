@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { AuthContext } from '../Routing/AuthContext';
 import { Formik } from 'formik';
+import Loader from '../Components/Loader';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,10 +50,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login(props) {
   const classes = useStyles();
-  const { login } = useContext(AuthContext);
+  const { login,loading } = useContext(AuthContext);
 
   return (
     <Grid container component="main" className={classes.root}>
+      {loading && <Loader />}
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>

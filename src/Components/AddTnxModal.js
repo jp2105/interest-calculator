@@ -27,16 +27,16 @@ export default function AddTnxModal({ setOpen, open }) {
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>New Transaction</DialogTitle>
             <Formik
-                initialValues={{ date: new Date(), amount: '', type: 'credit' }}
+                initialValues={{ date: new Date(), amount: '0', type: 'credit' }}
                 validationSchema={Yup.object().shape({
                     amount: Yup.string()
-                      .required("Amount is required!")
-                  })}
+                        .required("Amount is required!")
+                })}
                 onSubmit={async (values, { setSubmitting }) => {
-                    values.date=moment(values.date).format('MM/DD/YYYY')
-                AddTransaction(values).then(()=>{
-                    handleClose()
-                })
+                    values.date = moment(new Date(values.date)).format('MM/DD/YYYY')
+                    AddTransaction(values).then(() => {
+                        handleClose()
+                    })
                 }}>
                 {({
                     values,
@@ -56,9 +56,9 @@ export default function AddTnxModal({ setOpen, open }) {
                                     label="Date"
                                     inputFormat="DD MMM YYYY"
                                     value={values.date}
-                                    onChange={(d)=> setFieldValue('date',d)}
+                                    onChange={(d) => setFieldValue('date', d)}
                                     name="date"
-                                    renderInput={(params) => <TextField style={{ width: '100%' }} {...params} />}
+                                    renderInput={(params) => <TextField  {...params} />}
                                 />
 
                             </LocalizationProvider>
@@ -66,9 +66,9 @@ export default function AddTnxModal({ setOpen, open }) {
                                 value={values.amount}
                                 type='number'
                                 onChange={handleChange}
-                                style={{ marginTop: 10, width: '100%' }} 
-                                id="outlined-basic" 
-                                label="Amount" 
+                                // style={{ marginTop: 10, width: '100%' }}
+                                id="outlined-basic"
+                                label="Amount"
                                 name="amount"
                                 onBlur={handleBlur}
                                 variant="outlined"
