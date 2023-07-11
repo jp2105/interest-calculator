@@ -66,7 +66,7 @@ export default function Login(props) {
             Sign in
           </Typography>
           <Formik
-            initialValues={{ username: 'Jay@123', password: 'Test@123' }}
+            initialValues={{ username: '', password: '' }}
             onSubmit={async (values, { setSubmitting }) => {
               login(values.username, values.password).then(() => {
                 props.history.push("/")
