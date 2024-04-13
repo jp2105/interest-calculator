@@ -74,14 +74,7 @@ export const payoutAmount = (userData, isRefrence = false) => {
   let oldTotalCapital = TotalCapital(oldCapital);
 
   let finalObj = [];
-  if (oldTotalCapital) {
-    let obj = {
-      capital: oldTotalCapital,
-      days: cycleDays,
-      interest: intrestByDays(cycleDays, oldTotalCapital, userData.percentage)
-    }
-    finalObj.push(obj)
-  }
+
   if (newCapital.length) {
     for (let i = 0; i < newCapital?.length; i++) {
       let obj = {};
@@ -91,13 +84,23 @@ export const payoutAmount = (userData, isRefrence = false) => {
         diffDays = parseInt((new Date(nextPayoutDate) - new Date(tempObj.date)) / (1000 * 60 * 60 * 24), 10);
       } else {
         diffDays = Math.abs(parseInt((new Date(previousPayoutDate) - new Date(tempObj.date)) / (1000 * 60 * 60 * 24), 10));
+        oldTotalCapital = oldTotalCapital - tempObj.amount
       }
       obj = {
         capital: tempObj.amount,
         days: diffDays,
         interest: intrestByDays(diffDays, tempObj.amount, userData.percentage)
       }
+      
       finalObj.push(obj)
+      if (oldTotalCapital) {
+        let obj = {
+          capital: oldTotalCapital,
+          days: cycleDays,
+          interest: intrestByDays(cycleDays, oldTotalCapital, userData.percentage)
+        }
+        finalObj.push(obj)
+      }
     }
   }
   let finalTotal = 0;
