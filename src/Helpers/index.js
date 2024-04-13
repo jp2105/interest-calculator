@@ -93,15 +93,16 @@ export const payoutAmount = (userData, isRefrence = false) => {
       }
       
       finalObj.push(obj)
-      if (oldTotalCapital) {
-        let obj = {
-          capital: oldTotalCapital,
-          days: cycleDays,
-          interest: intrestByDays(cycleDays, oldTotalCapital, userData.percentage)
-        }
-        finalObj.push(obj)
-      }
+      
     }
+  }
+  if (oldTotalCapital) {
+    let obj = {
+      capital: oldTotalCapital,
+      days: cycleDays,
+      interest: intrestByDays(cycleDays, oldTotalCapital, userData.percentage)
+    }
+    finalObj.push(obj)
   }
   let finalTotal = 0;
   finalObj?.map(i => finalTotal = i.interest + finalTotal)
